@@ -1,0 +1,8 @@
+README.txt
+automated_reasoning/__init__.py
+automated_reasoning/automated_reasoning.py
+automated_reasoning.egg-info/PKG-INFO
+automated_reasoning.egg-info/SOURCES.txt
+automated_reasoning.egg-info/dependency_links.txt
+automated_reasoning.egg-info/not-zip-safe
+automated_reasoning.egg-info/top_level.txt
