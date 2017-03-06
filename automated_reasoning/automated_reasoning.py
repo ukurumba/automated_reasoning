@@ -102,10 +102,12 @@ def ttcheckall(kb,alpha,symbols,model):
 	else: 
 		P = symbols[0]
 		Rest = symbols[1:]
-		model_P_true = model_P_false = model
-		model_P_true[P] = 1
+		model_P_true = model.copy()
+		model_P_false = model.copy()
+		
 		model_P_false[P] = -1
-		return ttcheckall(kb,alpha,Rest,model_P_true) and ttcheckall(kb,alpha,Rest,model_P_false)
+		model_P_true[P] = 1
+		return (ttcheckall(kb,alpha,Rest,model_P_true) and ttcheckall(kb,alpha,Rest,model_P_false))
 
 
 
