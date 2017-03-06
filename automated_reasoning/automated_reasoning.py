@@ -67,21 +67,44 @@ class KB(object):
 	def add_sentence(self,sentence):
 		sentences.append(sentence)
 
-	def eval_sentences(self):
-		'''This method determines whether or not the specific situation (conceptualized as a knwoledge badse with a model and set of sentences) COULD be true.
-		i.e. if it is possible for the given set of sentences to be true under the current model the function returns True.''' 
-		eval_vals = [1] #so that first evaluation just returns truth-value of first sentence in KB
-		index=0
-		for each_sentence in self.sentences:
-			index+=1
-			eval_vals.append(each_sentence[0]([self.model[i] for i in each_sentence[1]]))
-			eval_vals = [And(eval_vals)] #checking to make sure every sentence in KB evaluates to true 
-			if eval_vals[0] == -1:
-				break
-		if eval_vals[0] == -1:
-			return False
-		else: 
-			return True 
+	
+	def multi_eval(sent,model):
+
+	    if type(sent[0])!=type(multi_eval): # for the collection of sentences in KB
+	        val = 1
+	        for element in sent:
+	            val = And([val,multi_eval(element,model)])
+	            if val == -1:
+	                break
+	        return val
+	    else:
+	        if sent[0]!= true and sent[0] != false: #for the case where there are 3 elements in the list
+	            if (type(sent[1]) == str or type(sent[1]) == int) and (type(sent[2]) == str or type(sent[2]) == int):
+	                return eval(sent,model)
+	            elif (type(sent[1]) == list) and (type(sent[2]) == int or type(sent[2]) == str):
+	                return eval([sent[0],multi_eval(sent[1],model),sent[2]],model)
+	            else: # if both arguments are non-unary sentences:
+	                return eval([sent[0],multi_eval(sent[1],model),multi_eval(sent[2],model)],model)
+	        else:
+	            if (type(sent[1]) == str or type(sent[1]) == int):
+	                return eval(sent,model)
+	            elif (type(sent[1]) == list):
+	                return eval([sent[0],multi_eval(sent[1],model)],model)
+	     
+	    
+
+	def eval(sentence):
+	    for i in range(1,len(sentence)):
+	        if type(sentence[i]) == str:
+	            sentence[i] = self.model[sentence[i]]
+	    if len(sentence) == 2:
+	        return sentence[0]([sentence[1]])
+	    elif len(sentence) == 3:
+	        return sentence[0]([sentence[1],sentence[2]])
+
+    
+    
+    
 
 def make_0(model):
 	for i in model:
@@ -95,8 +118,11 @@ def ttentails(kb,alpha):
 
 def ttcheckall(kb,alpha,symbols,model):
 	if not symbols: #if symbols is empty
-		if KB(model,kb.sentences).eval_sentences():
-			return KB(model,alpha).eval_sentences()
+		if KB(model,kb.sentences).multi_eval(kb.sentences) == 1:
+			if KB(model,alpha).multi_eval(alpha) == 1:
+				return True
+			else:
+				return False
 		else:
 			return True #always implies True if the first object is False
 	else: 
