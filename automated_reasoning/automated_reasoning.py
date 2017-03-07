@@ -135,67 +135,67 @@ def ttcheckall(kb,alpha,symbols,model):
         model_P_true[P] = 1
         return (ttcheckall(kb,alpha,Rest,model_P_true) and ttcheckall(kb,alpha,Rest,model_P_false))
 
-def pl_resolution(kb,alpha):
-    '''cnf form looks like this:
-        [['B','!C','A'],['!A','D','!F','E'],...] where each inner clause is a disjunction
-        and all the inner clauses are in a conjunction.'''
-    clauses = cnf(kb.sentences)
-    for clause in cnf(negate(alpha)): 
-        clauses.append(clause)
-    new = []
-    while True:
-        for clause_i in clauses: 
-            for clause_j in clauses:
-            	if clause_i != clause_j:
-	                resolvents = pl_resolve(clause_i,clause_j)
-	                if bool(clause) != True: #if resolvent is empty
-	                    return True
-	                new.append(resolvents)
-        if contains(new,clauses):
-            return false
-        for clause in new:
-            clauses.append(clause)
+# def pl_resolution(kb,alpha):
+#     '''cnf form looks like this:
+#         [['B','!C','A'],['!A','D','!F','E'],...] where each inner clause is a disjunction
+#         and all the inner clauses are in a conjunction.'''
+#     clauses = cnf(kb.sentences)
+#     for clause in cnf(negate(alpha)): 
+#         clauses.append(clause)
+#     new = []
+#     while True:
+#         for clause_i in clauses: 
+#             for clause_j in clauses:
+#             	if clause_i != clause_j:
+# 	                resolvents = pl_resolve(clause_i,clause_j)
+# 	                if bool(clause) != True: #if resolvent is empty
+# 	                    return True
+# 	                new.append(resolvents)
+#         if contains(new,clauses):
+#             return false
+#         for clause in new:
+#             clauses.append(clause)
 
 
-def pl_resolve(clause_i,clause_j):
-    '''inputs are two single-list disjunctions, i.e. ['B','!A','C'],['D'].
-    The output will be a single list with the non-complementary literals in either list.'''
-    output = []
-    clause_i = clause_i.copy()
-    clause_j = clause_j.copy()
-    clause_i = remove_redundancies(clause_i) #just making sure no two 'B's in a list.
-    clause_j = remove_redundancies(clause_j)
-    for literal in clause_i:
-        if contains_literal(literal_negate(literal),clause_j):
-            pass
-        else: 
-            output.append(literal)
-    return remove_redundancies(output)
+# def pl_resolve(clause_i,clause_j):
+#     '''inputs are two single-list disjunctions, i.e. ['B','!A','C'],['D'].
+#     The output will be a single list with the non-complementary literals in either list.'''
+#     output = []
+#     clause_i = clause_i.copy()
+#     clause_j = clause_j.copy()
+#     clause_i = remove_redundancies(clause_i) #just making sure no two 'B's in a list.
+#     clause_j = remove_redundancies(clause_j)
+#     for literal in clause_i:
+#         if contains_literal(literal_negate(literal),clause_j):
+#             pass
+#         else: 
+#             output.append(literal)
+#     return remove_redundancies(output)
 
-def remove_redundancies(clause):
-    #got the idea for this fx from http://stackoverflow.com/questions/6764909/python-how-to-remove-all-duplicate-items-from-a-list
-    output = []
-    for literal in clause:
-        if contains_literal(literal,output):
-            pass
-        else:
-            output.append(literal)
-    return output
+# def remove_redundancies(clause):
+#     #got the idea for this fx from http://stackoverflow.com/questions/6764909/python-how-to-remove-all-duplicate-items-from-a-list
+#     output = []
+#     for literal in clause:
+#         if contains_literal(literal,output):
+#             pass
+#         else:
+#             output.append(literal)
+#     return output
 
-def contains_literal(literal,clause):
-	#checks to see if a literal is within a clause
-    for element in clause:
-        if literal == element:
-            return True
-    return False
+# def contains_literal(literal,clause):
+# 	#checks to see if a literal is within a clause
+#     for element in clause:
+#         if literal == element:
+#             return True
+#     return False
 
-def literal_negate(literal):
-	'''negates a literal. i.e. '!B' -> 'B' and 'B' -> '!B'.'''
-    if literal[0] == '!':
-        literal = literal[1:]
-    else:
-        literal = '!' + literal
-    return literal
+# def literal_negate(literal):
+# 	'''negates a literal. i.e. '!B' -> 'B' and 'B' -> '!B'.'''
+# 	if literal[0] == '!':
+# 	    literal = literal[1:]
+# 	else:
+# 	    literal = '!' + literal
+# 	return literal
 
-def negate(sentence):
-    return [false,sentence]
+# def negate(sentence):
+#     return [false,sentence]
