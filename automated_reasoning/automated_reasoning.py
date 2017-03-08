@@ -135,67 +135,114 @@ def ttcheckall(kb,alpha,symbols,model):
         model_P_true[P] = 1
         return (ttcheckall(kb,alpha,Rest,model_P_true) and ttcheckall(kb,alpha,Rest,model_P_false))
 
-# def pl_resolution(kb,alpha):
-#     '''cnf form looks like this:
-#         [['B','!C','A'],['!A','D','!F','E'],...] where each inner clause is a disjunction
-#         and all the inner clauses are in a conjunction.'''
+def pl_resolution(clauses,alpha):
+    '''cnf form looks like this:
+        [['B','!C','A'],['!A','D','!F','E'],...] where each inner clause is a disjunction
+        and all the inner clauses are in a conjunction.'''
 #     clauses = cnf(kb.sentences)
 #     for clause in cnf(negate(alpha)): 
 #         clauses.append(clause)
-#     new = []
-#     while True:
-#         for clause_i in clauses: 
-#             for clause_j in clauses:
-#             	if clause_i != clause_j:
-# 	                resolvents = pl_resolve(clause_i,clause_j)
-# 	                if bool(clause) != True: #if resolvent is empty
-# 	                    return True
-# 	                new.append(resolvents)
-#         if contains(new,clauses):
-#             return false
-#         for clause in new:
-#             clauses.append(clause)
+    for clause in alpha:
+        clauses.append(clause)
+    new = []
+    it_num = 0
+    while True:
+        print('Iteration Number: ',it_num,'\n \n \n \n \n \n')
+        print('Clauses is: ',clauses)
+        for clause_i in clauses: 
+            for clause_j in clauses:
+                print('i: ',clause_i,'j ',clause_j)
+                resolvents = pl_resolve(clause_i,clause_j)
+                print(resolvents, 'evaluates to',bool(resolvents))
+                if bool(resolvents) != True: #if resolvent is empty
+                    return True
+                new.append(resolvents)
+        print(new)
+        if contains(new,clauses):
+            print('contains evaluates to: ',contains(new,clauses))
+            print('Ok now saying false')
+            return False
+        for clause in new:
+            clauses.append(clause)
+        it_num +=1
 
+def contains(new,clauses):
+    '''This function tests whether every clause contained in the list new is also contained in the list clauses. 
+    If every clause is not contained the function returns False, indicating there are new clauses. Otherwise, it returns True.'''
+    for new_clause in new: # for every clause in new
+        same_clause = False
+        for clause in clauses: #if there is some clause in clauses that matches with it
+            if same_elements(clause, new_clause):
+                same_clause = True #then that is not a new clause
+                break
+        if same_clause == False: #if there isn't any clause that matches
+            return False #then that is a new clause and we return False. 
+    
+    return True
 
-# def pl_resolve(clause_i,clause_j):
-#     '''inputs are two single-list disjunctions, i.e. ['B','!A','C'],['D'].
-#     The output will be a single list with the non-complementary literals in either list.'''
-#     output = []
-#     clause_i = clause_i.copy()
-#     clause_j = clause_j.copy()
-#     clause_i = remove_redundancies(clause_i) #just making sure no two 'B's in a list.
-#     clause_j = remove_redundancies(clause_j)
-#     for literal in clause_i:
-#         if contains_literal(literal_negate(literal),clause_j):
-#             pass
-#         else: 
-#             output.append(literal)
-#     return remove_redundancies(output)
+def same_elements(clause_i,clause_j):
+    '''This function tests whether two clauses are identical, i.e. the union of the two clauses is the same as a single clause.'''
+    for element_i in clause_i:
+        same_element = False
+        for element_j in clause_j:
+            if element_j == element_i:
+                same_element = True 
+                break
+        if same_element == False: #no element in clause_j matches the element in clause_i
+            return False
+    for element_j in clause_j:
+        same_element = False
+        for element_i in clause_i:
+            if element_i == element_j:
+                same_element = True 
+                break
+        if same_element == False: #no element in clause_i matches the element in clause_j
+            return False
+    return True 
 
-# def remove_redundancies(clause):
-#     #got the idea for this fx from http://stackoverflow.com/questions/6764909/python-how-to-remove-all-duplicate-items-from-a-list
-#     output = []
-#     for literal in clause:
-#         if contains_literal(literal,output):
-#             pass
-#         else:
-#             output.append(literal)
-#     return output
+def pl_resolve(clause_i,clause_j):
+    '''inputs are two single-list disjunctions, i.e. ['B','!A','C'],['D'].
+    The output will be a single list with the non-complementary literals in either list.'''
+    output = []
+    clause_i = clause_i.copy()
+    clause_j = clause_j.copy()
+    clause_i = remove_redundancies(clause_i) #just making sure no two 'B's in a list.
+    clause_j = remove_redundancies(clause_j)
+    for literal in clause_i:
+        if contains_literal(literal_negate(literal),clause_j):
+            clause_j.remove(literal_negate(literal)) #so that we don't add literal in when we append all remaining elements in j 
+        else: 
+            output.append(literal)
+    for literal in clause_j:
+    	output.append(literal)
+    return remove_redundancies(output)
 
-# def contains_literal(literal,clause):
-# 	#checks to see if a literal is within a clause
-#     for element in clause:
-#         if literal == element:
-#             return True
-#     return False
+def remove_redundancies(clause):
+    #got the idea for this fx from http://stackoverflow.com/questions/6764909/python-how-to-remove-all-duplicate-items-from-a-list
+    output = []
+    for literal in clause:
+        if contains_literal(literal,output):
+            pass
+        else:
+            output.append(literal)
+    return output
 
-# def literal_negate(literal):
-# 	'''negates a literal. i.e. '!B' -> 'B' and 'B' -> '!B'.'''
-# 	if literal[0] == '!':
-# 	    literal = literal[1:]
-# 	else:
-# 	    literal = '!' + literal
-# 	return literal
+def contains_literal(literal,clause):
+    for element in clause:
+        if literal == element:
+            return True
+    return False
 
-# def negate(sentence):
-#     return [false,sentence]
+def literal_negate(literal):
+    if literal[0] == '!':
+        return literal[1:]
+    else:
+        return '!' + literal
+
+def negate(sentence):
+    return [false,sentence]        
+            
+    
+            
+    
+    
