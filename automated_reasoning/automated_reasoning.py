@@ -138,10 +138,10 @@ def ttcheckall(kb,alpha,symbols,model):
 def pl_resolution(clauses,alpha):
     '''cnf form looks like this:
         [['B','!C','A'],['!A','D','!F','E'],...] where each inner clause is a disjunction
-        and all the inner clauses are in a conjunction.'''
-#     clauses = cnf(kb.sentences)
-#     for clause in cnf(negate(alpha)): 
-#         clauses.append(clause)
+        and all the inner clauses are in a conjunction.
+
+        NOTE: alpha is the NEGATION of the sentence you wish to prove.'''
+
     clauses = clauses.copy()
     for clause in alpha:
         clauses.append(clause)
