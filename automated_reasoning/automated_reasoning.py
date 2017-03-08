@@ -146,6 +146,7 @@ def pl_resolution(clauses,alpha):
     for clause in alpha:
         clauses.append(clause)
     new = []
+    it_num = 0
     while True:
         index_i = 0
         for clause_i in clauses:
@@ -169,6 +170,7 @@ def pl_resolution(clauses,alpha):
                     break
             if new_element == True:
                 clauses.append(clause)
+        it_num += 1
 
 
 def contains(new,clauses):
