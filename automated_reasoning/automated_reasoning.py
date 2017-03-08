@@ -147,20 +147,13 @@ def pl_resolution(clauses,alpha):
     new = []
     it_num = 0
     while True:
-        print('Iteration Number: ',it_num,'\n \n \n \n \n \n')
-        print('Clauses is: ',clauses)
         for clause_i in clauses: 
             for clause_j in clauses:
-                print('i: ',clause_i,'j ',clause_j)
                 resolvents = pl_resolve(clause_i,clause_j)
-                print(resolvents, 'evaluates to',bool(resolvents))
                 if bool(resolvents) != True: #if resolvent is empty
                     return True
                 new.append(resolvents)
-        print(new)
         if contains(new,clauses):
-            print('contains evaluates to: ',contains(new,clauses))
-            print('Ok now saying false')
             return False
         for clause in new:
             clauses.append(clause)
@@ -211,8 +204,10 @@ def pl_resolve(clause_i,clause_j):
     for literal in clause_i:
         if contains_literal(literal_negate(literal),clause_j):
             clause_j.remove(literal_negate(literal)) #so that we don't add literal in when we append all remaining elements in j 
-        else: 
-            output.append(literal)
+            clause_i.remove(literal)
+        break
+    for literal in clause_i:
+    	output.append(literal)
     for literal in clause_j:
     	output.append(literal)
     return remove_redundancies(output)
