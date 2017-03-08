@@ -145,19 +145,30 @@ def pl_resolution(clauses,alpha):
     for clause in alpha:
         clauses.append(clause)
     new = []
-    it_num = 0
     while True:
-        for clause_i in clauses: 
+        index_i = 0
+        for clause_i in clauses:
+            index_j = 0
             for clause_j in clauses:
-                resolvents = pl_resolve(clause_i,clause_j)
-                if bool(resolvents) != True: #if resolvent is empty
-                    return True
-                new.append(resolvents)
+                if not same_elements(clause_i,clause_j):
+                    if index_j >= index_i: 
+                        resolvents = pl_resolve(clause_i,clause_j)
+                        if bool(resolvents) != True: #if resolvent is empty
+                            return True
+                        new.append(resolvents)
+                index_j += 1
+            index_i += 1
         if contains(new,clauses):
             return False
-        for clause in new:
-            clauses.append(clause)
-        it_num +=1
+        for clause in new: #only appending new clauses
+            new_element = True
+            for old_clause in clauses: #checking every clause already in clauses
+                if same_elements(clause,old_clause):
+                    new_element = False
+                    break
+            if new_element == True:
+                clauses.append(clause)
+
 
 def contains(new,clauses):
     '''This function tests whether every clause contained in the list new is also contained in the list clauses. 
@@ -207,9 +218,9 @@ def pl_resolve(clause_i,clause_j):
             clause_i.remove(literal)
         break
     for literal in clause_i:
-    	output.append(literal)
+        output.append(literal)
     for literal in clause_j:
-    	output.append(literal)
+        output.append(literal)
     return remove_redundancies(output)
 
 def remove_redundancies(clause):
@@ -236,8 +247,3 @@ def literal_negate(literal):
 
 def negate(sentence):
     return [false,sentence]        
-            
-    
-            
-    
-    

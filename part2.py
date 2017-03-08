@@ -43,10 +43,13 @@ not_alpha_c = [['!Horn']]
 alphas = [alpha_a,alpha_b,alpha_c]
 not_alphas = [not_alpha_a,not_alpha_b,not_alpha_c]
 
+print('(Please be patient, this code takes a while to run. If it does not run within a couple of minutes it is probably erroring. Apologies for the delay. \n ')
+
 for i in range(0,3):
 	print('We wish to prove {} so we add {} to the knowledge base. This evaluates to: {}.'.format(alphas[i],not_alphas[i],ar.pl_resolution(sentences3,not_alphas[i])))
 
-test_sent = [['A']]
-alpha_test = [['!A']]
-not_alpha_test = [['A']]
-print(ar.pl_resolution(test_sent,not_alpha_test))
+
+print('''\n Thus we conclude:
+a) We cannot prove whether the unicorn is mythical or not. \n
+b) We can prove and do prove that the unicorn is magical. \n 
+c) We can prove and do prove that the unicorn is horned. \n ''')
