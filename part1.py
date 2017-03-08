@@ -34,8 +34,9 @@ print('See Python code to verify =). \n')
 print('Question 3: The Horn Clauses')
 print('----------------------------------------------------\n')
 print(' Although this solver does not take specific advantage of Horn clauses, it should be able to compute the overall veracity via model-checking. \n')
-print('There are 32 possible worlds: \n')
+print('There are 32 possible worlds. For example: \n')
 models = []
+counter = 0
 truth_vals = [-1,1]
 for i in truth_vals:
 	for j in truth_vals:
@@ -43,12 +44,14 @@ for i in truth_vals:
 			for l  in truth_vals:
 				for m in truth_vals:
 					model = {'Mythical' : i,'Mortal' : j, 'Mammal' : k, 'Horned' : l, 'Magical' : m}
-					print(model)
+					if counter <= 4:
+						print(model)
 					models.append(model)
+					counter+=1
 sentences = [[ar.Implies,'Mythical',[ar.false,'Mortal']],[ar.Implies,[ar.false,'Mythical'],[ar.And,'Mortal','Mammal']],[ar.Implies,[ar.Or,'Mammal',[ar.false,'Mortal']],'Horned'],[ar.Implies,'Horned','Magical']]
 
 
-print('\n I add the sentences of a), b), and c) to the KB (i.e. add [ar.true,Mythical]) and check whether this set of sentences can exist in any possible world. The results are below: \n')
+print('\n I add the sentences of a), b), and c) one-by-one to the KB (i.e. add [ar.true,Mythical]) and check whether this sentence and the knowledge base can exist in any possible world. The results are below: \n')
 kb = ar.KB(model,sentences)
 alpha = [ar.true,'Mythical']
 alpha2 = [ar.false,'Mythical']
