@@ -142,6 +142,7 @@ def pl_resolution(clauses,alpha):
 #     clauses = cnf(kb.sentences)
 #     for clause in cnf(negate(alpha)): 
 #         clauses.append(clause)
+    clauses = clauses.copy()
     for clause in alpha:
         clauses.append(clause)
     new = []

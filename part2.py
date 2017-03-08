@@ -43,7 +43,7 @@ not_alpha_c = [['!Horn']]
 alphas = [alpha_a,alpha_b,alpha_c]
 not_alphas = [not_alpha_a,not_alpha_b,not_alpha_c]
 
-print('(Please be patient, this code takes a while to run. If it does not run within a couple of minutes it is probably erroring. Apologies for the delay. \n ')
+print('Please be patient, this code takes a while to run. If it does not run within a few minutes it is probably erroring. Apologies for the delay. \n ')
 
 for i in range(0,3):
 	print('We wish to prove {} so we add {} to the knowledge base. This evaluates to: {}.'.format(alphas[i],not_alphas[i],ar.pl_resolution(sentences3,not_alphas[i])))
